@@ -213,7 +213,7 @@ export default function Home() {
       <footer className="w-full max-w-6xl mx-auto px-4 border-t border-border/40">
         <div className="h-14 flex items-center justify-between text-sm text-muted-foreground">
           <a
-            href="/admin"
+            href="https://admin.coxford.net"
             className="hover:text-foreground transition-colors"
           >
             Admin
