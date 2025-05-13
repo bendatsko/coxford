@@ -39,8 +39,9 @@ export function FeedbackModal({ isOpen, onClose }: FeedbackModalProps) {
         setIsSubmitted(false);
         onClose();
       }, 2000);
-    } catch (err) {
-      setError('Failed to send feedback. Please try again.');
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to send feedback';
+      setError(`${errorMessage}. Please try again.`);
     } finally {
       setIsSubmitting(false);
     }

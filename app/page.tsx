@@ -1,30 +1,17 @@
 'use client';
 
-import { Sun, Moon, Users, Copy, Map as MapIcon, Menu, ExternalLink } from 'lucide-react';
+import { Sun, Moon, Copy, ExternalLink } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
-import { ShimmerButton } from "@/components/magicui/shimmer-button";
 import { RainbowButton } from "@/components/magicui/rainbow-button";
 import Image from 'next/image';
 import { FeedbackModal } from "@/components/FeedbackModal";
 import { cn } from "@/lib/utils";
-
-// Replace the custom SVG with the official Discord mark
-const DiscordIcon = () => (
-  <Image
-    src="https://cdn.jsdelivr.net/npm/simple-icons@9/icons/discord.svg"
-    alt="Discord Logo"
-    width={24}
-    height={24}
-    className="w-6 h-6 dark:invert"
-  />
-);
+import Link from 'next/link';
 
 export default function Home() {
   const [theme, setTheme] = useState('light');
   const [showMoreMenu, setShowMoreMenu] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [showDiscordTooltip, setShowDiscordTooltip] = useState(false);
-  const [showMapTooltip, setShowMapTooltip] = useState(false);
   const [showThemeTooltip, setShowThemeTooltip] = useState(false);
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
   const [isInstallHighlighted, setIsInstallHighlighted] = useState(false);
@@ -32,32 +19,6 @@ export default function Home() {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const installSectionRef = useRef<HTMLElement>(null);
   const [mounted, setMounted] = useState(false);
-  const [serverStatus, setServerStatus] = useState({ online: false, version: '' });
-
-  const scrollToInstall = () => {
-    if (installSectionRef.current) {
-      const yOffset = -100; // Offset from the top of the viewport
-      const y = installSectionRef.current.getBoundingClientRect().top + window.pageYOffset + yOffset;
-      
-      window.scrollTo({ top: y, behavior: 'smooth' });
-      setIsInstallHighlighted(true);
-      setTimeout(() => setIsInstallHighlighted(false), 1000); // Match animation duration
-    }
-  };
-
-  useEffect(() => {
-    const pingServer = async () => {
-      try {
-        const response = await fetch('https://join.coxford.net:80');
-        setServerStatus({ online: response.ok, version: '' });
-      } catch (error) {
-        setServerStatus({ online: false, version: '' });
-      }
-    };
-    pingServer();
-    const interval = setInterval(pingServer, 30000); // Ping every 30 seconds
-    return () => clearInterval(interval);
-  }, []);
 
   useEffect(() => {
     const stored = localStorage.getItem('theme');
@@ -75,6 +36,22 @@ export default function Home() {
     setMounted(true);
   }, []);
 
+  useEffect(() => {
+    const handleScroll = () => {
+      if (installSectionRef.current) {
+        const rect = installSectionRef.current.getBoundingClientRect();
+        const isVisible = rect.top < window.innerHeight && rect.bottom >= 0;
+        if (isVisible && !isInstallHighlighted) {
+          setIsInstallHighlighted(true);
+        }
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    handleScroll(); // Check initial position
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [isInstallHighlighted]);
+
   const toggleTheme = () => {
     const newTheme = theme === 'dark' ? 'light' : 'dark';
     setTheme(newTheme);
@@ -87,7 +64,7 @@ export default function Home() {
       <header className="sticky top-0 z-50 border-b border-border/40 bg-background/80 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60">
         <nav className="w-full max-w-7xl mx-auto px-4 h-16 flex items-center justify-between gap-8">
           <div className="flex items-center gap-8">
-            <a href="/" className="flex items-center gap-2">
+            <Link href="/" className="flex items-center gap-2">
               <Image 
                 src="/logo.png"
                 alt="Coxford Logo"
@@ -96,7 +73,7 @@ export default function Home() {
                 className="object-contain opacity-80"
               />
               <span className="font-medium text-base tracking-tight">Coxford</span>
-            </a>
+            </Link>
             <div className="hidden md:flex items-center gap-6">
               <a 
                 href="https://map.coxford.net"
@@ -176,7 +153,6 @@ export default function Home() {
 
       <main className="flex-1">
         <div className="w-full max-w-6xl mx-auto px-4 py-16 flex flex-col gap-16">
-          {/* Hero Section */}
           <section className="text-center">
             <h1 className="text-3xl md:text-4xl font-bold tracking-tight mb-3">Welcome to Coxford</h1>
             <p className="text-base text-muted-foreground mb-6">Where we embody <b>people-last engineering</b>™, because this is a Minecraft server.</p>
@@ -202,14 +178,11 @@ export default function Home() {
             </div>
           </section>
 
-          {/* Main Content Grid */}
           <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16">
-            {/* Left: Installation Steps */}
             <section 
               ref={installSectionRef}
               className="flex flex-col relative"
             >
-              {/* Shimmer highlight effect */}
               <div
                 className={cn(
                   "absolute inset-0 -z-10 opacity-0 transition-opacity duration-300 rounded-2xl overflow-hidden",
@@ -228,70 +201,68 @@ export default function Home() {
                 />
               </div>
 
-              <div className="rounded-2xl">
+              <div className="rounded-2xl h-full">
                 <h2 className="text-2xl font-bold tracking-tight mb-2">How to Join</h2>
-                <p className="text-sm text-muted-foreground mb-6">To play, just install the modpack through CurseForge. Here's how:</p>
+                <p className="text-sm text-muted-foreground mb-6">Follow these steps to install the required mods and join the server.</p>
                 <ol className="flex flex-col gap-4">
-                  {/* Step 1 */}
-                  <li className="rounded-2xl bg-card shadow-sm border border-border/40 p-6 flex gap-4 items-start">
+                  <li className="rounded-2xl bg-card border border-border/40 p-6 flex gap-4 items-start">
                     <div className="w-8 h-8 flex items-center justify-center rounded-lg bg-muted font-medium text-base text-muted-foreground mt-1">1</div>
                     <div className="flex-1 min-w-0">
-                      <h3 className="font-semibold text-lg mb-2">Launch the CurseForge App</h3>
-                      <p className="text-muted-foreground mb-3 text-sm">You will launch Minecraft Java Edition from here as opposed to the Minecraft Launcher.</p>
+                      <h3 className="font-semibold text-lg mb-2">Download & Install CurseForge</h3>
+                      <p className="text-muted-foreground mb-3 text-sm">CurseForge is the most popular mod manager for Minecraft. Download and install it to easily manage your modpacks.</p>
                       <a
                         href="https://www.curseforge.com/download/app"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-primary hover:underline font-medium text-base"
+                        className="inline-flex items-center gap-1 group"
                       >
-                        Click to Download
+                        Download CurseForge
+                        <ExternalLink size={14} className="opacity-50 group-hover:opacity-100 transition-opacity" />
                       </a>
                     </div>
                   </li>
-                  {/* Step 2 */}
-                  <li className="rounded-2xl bg-card shadow-sm border border-border/40 p-6 flex gap-4 items-start">
+                  <li className="rounded-2xl bg-card border border-border/40 p-6 flex gap-4 items-start">
                     <div className="w-8 h-8 flex items-center justify-center rounded-lg bg-muted font-medium text-base text-muted-foreground mt-1">2</div>
                     <div className="flex-1 min-w-0">
                       <h3 className="font-semibold text-lg mb-2">Install the Modpack</h3>
-                      <p className="text-muted-foreground mb-3 text-sm">Download the zip file below. Then, open CurseForge, click 'Import Modpack', select the downloaded zip, and launch the game.</p>
+                      <p className="text-muted-foreground mb-3 text-sm">Currently Running: All of Create by LunaPixelStudios. Download and import the modpack zip into CurseForge.</p>
                       <a
                         href="https://www.curseforge.com/minecraft/modpacks/aoc/download/6338398"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-primary hover:underline font-medium text-base"
+                        className="inline-flex items-center gap-1 group"
                       >
-                        Click to Download
+                        Download Modpack
+                        <ExternalLink size={14} className="opacity-50 group-hover:opacity-100 transition-opacity" />
                       </a>
                     </div>
                   </li>
-                  {/* Step 3 */}
-                  <li className="rounded-2xl bg-card shadow-sm border border-border/40 p-6 flex gap-4 items-start">
+                  <li className="rounded-2xl bg-card border border-border/40 p-6 flex gap-4 items-start">
                     <div className="w-8 h-8 flex items-center justify-center rounded-lg bg-muted font-medium text-base text-muted-foreground mt-1">3</div>
                     <div className="flex-1 min-w-0">
-                      <h3 className="font-semibold text-lg mb-2">Connect and Have Fun!</h3>
-                      <p className="text-muted-foreground text-sm">Build to your heart's content!</p>
+                      <h3 className="font-semibold text-lg mb-2">Launch Minecraft via CurseForge</h3>
+                      <p className="text-muted-foreground text-sm">Open CurseForge, click &quot;Import Modpack&quot;, select the downloaded zip, and launch the game.</p>
                     </div>
                   </li>
                 </ol>
               </div>
             </section>
 
-            {/* Right: Live Map */}
-            <section className="flex flex-col">
+            <section className="flex flex-col h-full">
               <h2 className="text-2xl font-bold tracking-tight mb-2">Live Map</h2>
-              <p className="text-sm text-muted-foreground mb-6">Last updated: just now</p>
+              <p className="text-sm text-muted-foreground mb-6">View the server world in real-time, including player locations and builds.</p>
               {!dynmapError ? (
-                <div className="w-full aspect-[1.1/1] rounded-2xl overflow-hidden shadow-lg bg-card border border-border flex flex-col justify-stretch" style={{ minHeight: 480 }}>
+                <div className="w-full grow rounded-2xl overflow-hidden shadow-lg bg-card border border-border flex flex-col justify-stretch">
                   <iframe
                     ref={iframeRef}
                     src="https://map.coxford.net"
                     title="DynMap"
-                    className="w-full h-full border-0"
+                    className="w-full h-full min-h-[480px]"
                     allowFullScreen
                   />
                 </div>
               ) : (
-                <div className="w-full aspect-[1.1/1] rounded-2xl overflow-hidden shadow-lg bg-muted border border-border flex flex-col items-center justify-center gap-4" style={{ minHeight: 480 }}>
+                <div className="w-full grow rounded-2xl overflow-hidden shadow-lg bg-muted border border-border flex flex-col items-center justify-center gap-4">
                   <div className="text-5xl text-muted-foreground">🗺️</div>
                   <div className="text-center text-muted-foreground font-medium">
                     Live map preview unavailable.<br />

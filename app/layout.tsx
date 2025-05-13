@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Coxford Community",
-  description: "A Minecraft server and community for engineers, tinkerers, and friends.",
+  title: "Coxford",
+  description: "Where we embody people-last engineering™, because this is a Minecraft server.",
 };
 
 export default function RootLayout({

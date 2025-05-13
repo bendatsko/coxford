@@ -93,7 +93,7 @@
   --accent: oklch(0.3 0 0);
   --accent-foreground: oklch(1 0 0);
   --destructive: oklch(0.7 0.2 20);
-  --border: oklch(0.94 0 0);
+  --border: oklch(0.92 0 0);
   --input: oklch(0.9 0 0);
   --ring: oklch(0.3 0 0);
   --chart-1: oklch(0.646 0.222 41.116);
@@ -118,34 +118,34 @@
 
 .dark {
   /* Dark mode */
-  --background: oklch(0.12 0.02 240);
+  --background: oklch(0.1 0 0);
   --foreground: oklch(0.98 0 0);
-  --card: oklch(0.15 0.02 240);
+  --card: oklch(0.14 0 0);
   --card-foreground: oklch(0.95 0 0);
-  --popover: oklch(0.15 0.02 240);
+  --popover: oklch(0.14 0 0);
   --popover-foreground: oklch(0.95 0 0);
   --primary: oklch(0.95 0 0);
-  --primary-foreground: oklch(0.1 0.02 240);
-  --secondary: oklch(0.2 0.02 240);
+  --primary-foreground: oklch(0.1 0 0);
+  --secondary: oklch(0.18 0 0);
   --secondary-foreground: oklch(0.98 0 0);
-  --muted: oklch(0.18 0.02 240);
+  --muted: oklch(0.16 0 0);
   --muted-foreground: oklch(0.7 0 0);
   --accent: oklch(0.95 0 0);
-  --accent-foreground: oklch(0.1 0.02 240);
+  --accent-foreground: oklch(0.1 0 0);
   --destructive: oklch(0.7 0.2 20);
-  --border: oklch(0.2 0.02 240);
-  --input: oklch(0.2 0.02 240);
+  --border: oklch(0.2 0 0);
+  --input: oklch(0.2 0 0);
   --ring: oklch(0.95 0 0);
   --chart-1: oklch(0.488 0.243 264.376);
   --chart-2: oklch(0.696 0.17 162.48);
   --chart-3: oklch(0.769 0.188 70.08);
   --chart-4: oklch(0.627 0.265 303.9);
   --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
+  --sidebar: oklch(0.15 0 0);
   --sidebar-foreground: oklch(0.985 0 0);
   --sidebar-primary: oklch(0.488 0.243 264.376);
   --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent: oklch(0.2 0 0);
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
@@ -154,6 +154,34 @@
   --color-3: oklch(69.6% 0.165 251);
   --color-4: oklch(80.2% 0.134 225);
   --color-5: oklch(90.7% 0.231 133);
+}
+
+/* Add a subtle noise texture to dark mode background */
+.dark::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  filter: contrast(300%) brightness(100%) opacity(0.12);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.dark body {
+  position: relative;
+  z-index: 1;
+}
+
+/* Add subtle gradient to cards in dark mode */
+.dark .bg-card {
+  background-image: linear-gradient(180deg, oklch(0.15 0 0), oklch(0.14 0 0));
+  border: 1px solid oklch(0.25 0 0 / 0.5);
+}
+
+/* Add subtle inner shadow to inputs and textareas in dark mode */
+.dark textarea,
+.dark input:not([type="submit"]) {
+  box-shadow: inset 0 2px 4px oklch(0 0 0 / 0.2);
 }
 
 @layer base {
@@ -241,4 +269,32 @@
   100% {
     transform: translateX(100%);
   }
+}
+
+/* Consistent card styling for both modes */
+.bg-card {
+  border: 1px solid var(--border);
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+/* Download link styles */
+a[href*="download"] {
+  @apply text-sm font-semibold tracking-tight text-primary hover:text-primary/90 transition-colors;
+  text-decoration: none !important;
+}
+
+.dark a[href*="download"] {
+  @apply text-accent hover:text-accent/90;
+}
+
+/* Input styles for both modes */
+textarea,
+input:not([type="submit"]) {
+  @apply bg-muted/50 border-border/60;
+}
+
+/* Dark mode input styles */
+.dark textarea,
+.dark input:not([type="submit"]) {
+  box-shadow: inset 0 2px 4px oklch(0 0 0 / 0.2);
 }
