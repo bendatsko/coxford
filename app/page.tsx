@@ -22,9 +22,10 @@ export default function Home() {
 
   useEffect(() => {
     const stored = localStorage.getItem('theme');
-    const systemPrefers = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    setTheme(stored || (systemPrefers ? 'dark' : 'light'));
-    document.documentElement.classList.toggle('dark', stored === 'dark' || (!stored && systemPrefers));
+    if (stored === 'dark') {
+      setTheme('dark');
+      document.documentElement.classList.add('dark');
+    }
 
     if (iframeRef.current) {
       const onError = () => setDynmapError(true);
@@ -61,7 +62,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-background text-foreground font-[family-name:var(--font-geist-sans)]">
-      <header className="sticky top-0 z-50 border-b border-border/40 bg-background/80 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60">
+      <header className="sticky top-0 z-50 border-b border-border/40 bg-card/80 backdrop-blur-xl supports-[backdrop-filter]:bg-card/60">
         <nav className="w-full max-w-7xl mx-auto px-4 h-16 flex items-center justify-between gap-8">
           <div className="flex items-center gap-8">
             <Link href="/" className="flex items-center gap-2">
@@ -159,13 +160,13 @@ export default function Home() {
             <div className="relative w-full max-w-md mx-auto">
               <RainbowButton
                 onClick={() => {
-                  navigator.clipboard.writeText('join.coxford.net');
+                  navigator.clipboard.writeText('join.coxford.net:80');
                   setCopied(true);
                   setTimeout(() => setCopied(false), 2000);
                 }}
                 className="w-full py-3 px-10 text-xl font-mono tracking-tight flex items-center justify-center gap-3 group cursor-pointer"
               >
-                <span className="sharpen-mono text-lg md:text-xl tracking-tight">join.coxford.net</span>
+                <span className="sharpen-mono text-lg md:text-xl tracking-tight">join.coxford.net:80</span>
                 <div className="flex items-center gap-1 text-primary-foreground/70 group-hover:text-primary-foreground transition-colors">
                   <Copy size={20} className="group-hover:scale-110 transition-transform" />
                 </div>
@@ -209,7 +210,7 @@ export default function Home() {
                     <div className="w-8 h-8 flex items-center justify-center rounded-lg bg-muted font-medium text-base text-muted-foreground mt-1">1</div>
                     <div className="flex-1 min-w-0">
                       <h3 className="font-semibold text-lg mb-2">Download & Install CurseForge</h3>
-                      <p className="text-muted-foreground mb-3 text-sm">CurseForge is the most popular mod manager for Minecraft. Download and install it to easily manage your modpacks.</p>
+                      <p className="text-muted-foreground mb-3 text-sm">The mod manager you'll need to run modded Minecraft.</p>
                       <a
                         href="https://www.curseforge.com/download/app"
                         target="_blank"
@@ -225,7 +226,7 @@ export default function Home() {
                     <div className="w-8 h-8 flex items-center justify-center rounded-lg bg-muted font-medium text-base text-muted-foreground mt-1">2</div>
                     <div className="flex-1 min-w-0">
                       <h3 className="font-semibold text-lg mb-2">Install the Modpack</h3>
-                      <p className="text-muted-foreground mb-3 text-sm">Currently Running: All of Create by LunaPixelStudios. Download and import the modpack zip into CurseForge.</p>
+                      <p className="text-muted-foreground mb-3 text-sm">Download All of Create, then open CurseForge and import the zip file when creating a new modpack.</p>
                       <a
                         href="https://www.curseforge.com/minecraft/modpacks/aoc/download/6338398"
                         target="_blank"
@@ -240,8 +241,8 @@ export default function Home() {
                   <li className="rounded-2xl bg-card border border-border/40 p-6 flex gap-4 items-start">
                     <div className="w-8 h-8 flex items-center justify-center rounded-lg bg-muted font-medium text-base text-muted-foreground mt-1">3</div>
                     <div className="flex-1 min-w-0">
-                      <h3 className="font-semibold text-lg mb-2">Launch Minecraft via CurseForge</h3>
-                      <p className="text-muted-foreground text-sm">Open CurseForge, click &quot;Import Modpack&quot;, select the downloaded zip, and launch the game.</p>
+                      <h3 className="font-semibold text-lg mb-2">Connect to Server</h3>
+                      <p className="text-muted-foreground text-sm">Launch Minecraft through CurseForge and connect to join.coxford.net:80</p>
                     </div>
                   </li>
                 </ol>

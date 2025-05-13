@@ -118,22 +118,22 @@
 
 .dark {
   /* Dark mode */
-  --background: oklch(0.1 0 0);
+  --background: oklch(0.12 0 0);
   --foreground: oklch(0.98 0 0);
-  --card: oklch(0.14 0 0);
+  --card: oklch(0.16 0 0);
   --card-foreground: oklch(0.95 0 0);
-  --popover: oklch(0.14 0 0);
+  --popover: oklch(0.16 0 0);
   --popover-foreground: oklch(0.95 0 0);
   --primary: oklch(0.95 0 0);
-  --primary-foreground: oklch(0.1 0 0);
-  --secondary: oklch(0.18 0 0);
+  --primary-foreground: oklch(0.12 0 0);
+  --secondary: oklch(0.16 0 0);
   --secondary-foreground: oklch(0.98 0 0);
-  --muted: oklch(0.16 0 0);
+  --muted: oklch(0.18 0 0);
   --muted-foreground: oklch(0.7 0 0);
   --accent: oklch(0.95 0 0);
-  --accent-foreground: oklch(0.1 0 0);
+  --accent-foreground: oklch(0.12 0 0);
   --destructive: oklch(0.7 0.2 20);
-  --border: oklch(0.2 0 0);
+  --border: oklch(0.25 0 0);
   --input: oklch(0.2 0 0);
   --ring: oklch(0.95 0 0);
   --chart-1: oklch(0.488 0.243 264.376);
@@ -162,7 +162,7 @@
   position: fixed;
   inset: 0;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-  filter: contrast(300%) brightness(100%) opacity(0.12);
+  filter: contrast(300%) brightness(100%) opacity(0.15);
   pointer-events: none;
   z-index: 0;
 }
@@ -174,11 +174,42 @@
 
 /* Add subtle gradient to cards in dark mode */
 .dark .bg-card {
-  background-image: linear-gradient(180deg, oklch(0.15 0 0), oklch(0.14 0 0));
-  border: 1px solid oklch(0.25 0 0 / 0.5);
+  background: linear-gradient(180deg, oklch(0.18 0 0), oklch(0.16 0 0));
+  border: 1px solid oklch(0.3 0 0 / 0.6);
+  box-shadow: 
+    0 1px 1px oklch(0 0 0 / 0.1),
+    0 1px 3px oklch(0 0 0 / 0.1);
 }
 
-/* Add subtle inner shadow to inputs and textareas in dark mode */
+/* Dark mode hover effects for cards */
+.dark .bg-card:hover {
+  border-color: oklch(0.35 0 0 / 0.8);
+  background: linear-gradient(180deg, oklch(0.19 0 0), oklch(0.17 0 0));
+}
+
+/* Enhance contrast for numbered circles in dark mode */
+.dark .bg-muted {
+  background-color: oklch(0.14 0 0);
+  border: 1px solid oklch(0.3 0 0 / 0.3);
+}
+
+/* Download link styles */
+a[href*="download"] {
+  @apply text-sm font-semibold tracking-tight text-primary hover:text-primary/90 transition-colors;
+  text-decoration: none !important;
+}
+
+.dark a[href*="download"] {
+  @apply text-accent hover:text-accent/90;
+}
+
+/* Input styles for both modes */
+textarea,
+input:not([type="submit"]) {
+  @apply bg-muted/50 border-border/60;
+}
+
+/* Dark mode input styles */
 .dark textarea,
 .dark input:not([type="submit"]) {
   box-shadow: inset 0 2px 4px oklch(0 0 0 / 0.2);
@@ -277,24 +308,18 @@
   transition: border-color 0.2s ease, background-color 0.2s ease;
 }
 
-/* Download link styles */
-a[href*="download"] {
-  @apply text-sm font-semibold tracking-tight text-primary hover:text-primary/90 transition-colors;
-  text-decoration: none !important;
+/* Add subtle gradient to header in dark mode */
+.dark header {
+  background: linear-gradient(180deg, oklch(0.17 0 0), oklch(0.16 0 0));
+  border-color: oklch(0.3 0 0 / 0.4);
 }
 
-.dark a[href*="download"] {
-  @apply text-accent hover:text-accent/90;
-}
-
-/* Input styles for both modes */
-textarea,
-input:not([type="submit"]) {
-  @apply bg-muted/50 border-border/60;
-}
-
-/* Dark mode input styles */
-.dark textarea,
-.dark input:not([type="submit"]) {
-  box-shadow: inset 0 2px 4px oklch(0 0 0 / 0.2);
+/* Enhance dropdown menu in dark mode */
+.dark [role="menu"],
+.dark .dropdown-menu {
+  background: linear-gradient(180deg, oklch(0.18 0 0), oklch(0.16 0 0));
+  border-color: oklch(0.3 0 0 / 0.6);
+  box-shadow: 
+    0 4px 6px oklch(0 0 0 / 0.1),
+    0 2px 4px oklch(0 0 0 / 0.1);
 }
