@@ -210,7 +210,7 @@ export default function Home() {
                     <div className="w-8 h-8 flex items-center justify-center rounded-lg bg-muted font-medium text-base text-muted-foreground mt-1">1</div>
                     <div className="flex-1 min-w-0">
                       <h3 className="font-semibold text-lg mb-2">Download & Install CurseForge</h3>
-                      <p className="text-muted-foreground mb-3 text-sm">The mod manager you'll need to run modded Minecraft.</p>
+                      <p className="text-muted-foreground mb-3 text-sm">The mod manager you&apos;ll need to run modded Minecraft.</p>
                       <a
                         href="https://www.curseforge.com/download/app"
                         target="_blank"
