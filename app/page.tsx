@@ -25,6 +25,21 @@ export default function Home() {
   const [dynmapError, setDynmapError] = useState(false);
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const [mounted, setMounted] = useState(false);
+  const [serverStatus, setServerStatus] = useState({ online: false, version: '' });
+
+  useEffect(() => {
+    const pingServer = async () => {
+      try {
+        const response = await fetch('https://join.coxford.net:80');
+        setServerStatus({ online: response.ok, version: '' });
+      } catch (error) {
+        setServerStatus({ online: false, version: '' });
+      }
+    };
+    pingServer();
+    const interval = setInterval(pingServer, 30000); // Ping every 30 seconds
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     const stored = localStorage.getItem('theme');
@@ -92,6 +107,20 @@ export default function Home() {
                 </span>
               )}
             </a>
+            <button
+            onClick={toggleTheme}
+            className="p-2 rounded-md hover:bg-muted transition-colors relative"
+            aria-label="Toggle light/dark mode"
+            onMouseEnter={() => setShowThemeTooltip(true)}
+            onMouseLeave={() => setShowThemeTooltip(false)}
+          >
+            <Sun size={18} />
+            {mounted && showThemeTooltip && (
+              <span className="absolute -top-8 left-1/2 -translate-x-1/2 px-2 py-1 rounded bg-black text-white text-xs font-medium opacity-90 z-10 shadow-lg whitespace-nowrap">
+                Toggle light/dark mode
+              </span>
+            )}
+          </button>
           </div>
         </div>
       </header>
@@ -100,12 +129,6 @@ export default function Home() {
         <div className="w-full max-w-6xl mx-auto px-4 py-16 flex flex-col gap-16 items-center">
           {/* Online indicator above join.coxford.net */}
           <div className="flex flex-col items-center gap-2 mb-2">
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <div className="w-2 h-2 rounded-full bg-green-500" />
-              <span className="font-medium">Online</span>
-              <Users size={16} className="ml-1" />
-              <span>0</span>
-            </div>
             <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-center mb-1">Join the Community Server</h1>
             <span className="text-base text-muted-foreground mb-2 text-center">A Minecraft server and community for engineers, tinkerers, and friends.</span>
             <ShimmerButton
@@ -212,27 +235,19 @@ export default function Home() {
 
       <footer className="w-full max-w-6xl mx-auto px-4 border-t border-border/40">
         <div className="h-14 flex items-center justify-between text-sm text-muted-foreground">
+        <a
+            className="hover:text-foreground transition-colors"
+          >
+            © 2025 Informatik Haus
+          </a>
+        
+          <span></span>
           <a
             href="https://admin.coxford.net"
             className="hover:text-foreground transition-colors"
           >
             Admin
           </a>
-          <span>© 2025 Informatik Haus</span>
-          <button
-            onClick={toggleTheme}
-            className="p-2 rounded-md hover:bg-muted transition-colors relative"
-            aria-label="Toggle light/dark mode"
-            onMouseEnter={() => setShowThemeTooltip(true)}
-            onMouseLeave={() => setShowThemeTooltip(false)}
-          >
-            <Sun size={18} />
-            {mounted && showThemeTooltip && (
-              <span className="absolute -top-8 left-1/2 -translate-x-1/2 px-2 py-1 rounded bg-black text-white text-xs font-medium opacity-90 z-10 shadow-lg whitespace-nowrap">
-                Toggle light/dark mode
-              </span>
-            )}
-          </button>
         </div>
       </footer>
     </div>
